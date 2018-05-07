@@ -89,7 +89,7 @@ class ParserCommand extends ContainerAwareCommand
         ];
 
         $re = preg_replace($patterns, $replace, $price);
-        $price['item_beauty'] = trim(preg_replace('/\s\s+/', ' ', $re['item`    ']));
+        $price['item_beauty'] = trim(preg_replace('/\s\s+/', ' ', $re['item']));
 
         return $price;
     }
