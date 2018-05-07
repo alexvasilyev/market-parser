@@ -12,10 +12,14 @@ class Parser
      * @var Client
      */
     private $client;
+    private $accountName;
+    private $accountPass;
 
-    public function __construct()
+    public function __construct($accountName, $accountPass)
     {
         $this->client = new Client();
+        $this->accountName = $accountName;
+        $this->accountPass = $accountPass;
     }
 
     public function getClient()
@@ -30,8 +34,8 @@ class Parser
     {
         $crawler = $this->client->request('GET', 'http://motr-online.com/login');
         $form = $crawler->selectButton('Login')->form();
-        $form['login'] = '';
-        $form['pass'] = '';
+        $form['login'] = $this->accountName;
+        $form['pass'] = $this->accountPass;
 
         // submits the login form
         $crawler = $this->client->submit($form);
