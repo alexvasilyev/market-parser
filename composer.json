@@ -11,6 +11,7 @@
         "fabpot/goutte": "^3.2",
         "knplabs/doctrine-behaviors": "^1.5",
         "knplabs/knp-paginator-bundle": "^2.7",
+        "symfony/asset": "^4.0",
         "symfony/console": "^4.0",
         "symfony/dom-crawler": "^4.0",
         "symfony/flex": "^1.0",
