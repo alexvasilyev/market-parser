@@ -54,15 +54,30 @@ class Parser
     }
 
     /**
-     * @param string $searchTerm
+     * @param array $searchOptions
      *
      * @return array
      */
-    public function parseMarket($searchTerm = ''): array
+    public function parseMarket($searchOptions): array
     {
+        $defaultOptions = [
+            'name' => '',
+            'minAtk' => 0,
+            'minMatk' => 0,
+            'weaponLv' => 0,
+            'charLv' => 175,
+            'minSlots' => 0,
+            'maxSlots' => 4,
+        ];
+        $searchOptions = array_merge($defaultOptions, $searchOptions);
+
+        $this->authenticate();
+
         $crawler = $this->getClient()->request('GET', 'http://motr-online.com/members/vendingstat');
         $form = $crawler->selectButton('Обновить')->form();
-        $form['name'] = $searchTerm;
+        foreach ($searchOptions as $option => $value) {
+            $form[$option] = $value;
+        }
         $crawler = $this->getClient()->submit($form);
 
         return $this->parsePageResults($crawler);

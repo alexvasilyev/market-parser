@@ -24,34 +24,27 @@ class ParserCommand extends ContainerAwareCommand
             'Start parsing'
         ]);
 
+        $searchOptions = [
+            'name' => 'knife',
+            'minAtk' => 0,
+            'minMatk' => 0,
+            'weaponLv' => 0,
+            'charLv' => 175,
+            'minSlots' => 3,
+            'maxSlots' => 4,
+        ];
+        $enchantRequisites = [
+            'ASPD +2',
+            'DEX',
+        ];
+
         /** @var Parser $parser */
         $parser = $this->getContainer()->get(Parser::class);
+        $prices = $parser->parseMarket($searchOptions);
 
-        $prices = $parser->parseKnives();
+        $filteredPrices = $this->filterKnifeEnchants($prices, $enchantRequisites);
 
-        $iA = 0;
-        $iAD = 0;
-
-        $aspdPrices = [];
-        $aspdDexPrices = [];
-        foreach ($prices as $price) {
-            if (false !== strpos($price['item'], 'Knife [3]')) {
-                $hasEnchantASPD = $this->hasEnchant('ASPD +2', $price);
-                if ($hasEnchantASPD) {
-                    $iA++;
-                    $aspdPrices[] = $this->beautifyPriceItem($price);
-                }
-                if ($hasEnchantASPD && $this->hasEnchant('DEX', $price)) {
-                    $iAD++;
-                    $aspdDexPrices[] = $this->beautifyPriceItem($price);
-                }
-            }
-
-        }
-        $output->writeln("{$iA} knives with ASPD found");
-        $output->writeln("{$iAD} knives with ASPD and DEX found");
-
-        foreach ($aspdDexPrices as $price) {
+        foreach ($filteredPrices as $price) {
             $output->writeln($price['item_beauty']);
             $output->writeln("{$price['price']}, {$price['place']} - {$price['vendor']}({$price['vend_name']}), {$price['quantity']}");
             $output->writeln('');
@@ -60,21 +53,26 @@ class ParserCommand extends ContainerAwareCommand
     }
 
     /**
-     * @param $enchant
+     * @param $requisite
      * @param $price
      *
      * @return false|int
      */
-    protected function hasEnchant($enchant, $price)
+    protected function hasEnchant($requisite, $price)
     {
-        $enchant = preg_quote($enchant);
-        $pattern = "/<img style=\"[^\"]+\" src=\"[^\"]+\" title=\"{$enchant}/i";
+        $requisite = preg_quote($requisite);
+        $pattern = "/<img style=\"[^\"]+\" src=\"[^\"]+\" title=\"{$requisite}/i";
 
         return preg_match($pattern, $price['item']);
     }
 
     protected function beautifyPriceItem($price)
     {
+        /**
+         * Remove td from $price['item']
+         */
+        $re = preg_replace('/<\/?td[^>]*>/i', '', $price);
+        $price['item'] = trim(preg_replace('/\s\s+/', ' ', $re['item']));
         $patterns = [
             '/<img style="[^"]+" src="[^"]+" title="([^"]+)"[^>]+>/i',
             '/<img style="[^"]+" src="[^"]+" alt="[^"]+"[^>]+>/i',
@@ -92,5 +90,27 @@ class ParserCommand extends ContainerAwareCommand
         $price['item_beauty'] = trim(preg_replace('/\s\s+/', ' ', $re['item']));
 
         return $price;
+    }
+
+    /**
+     * @param $prices
+     * @param $enchantRequisites
+     *
+     * @return array
+     */
+    protected function filterKnifeEnchants($prices, $enchantRequisites): array
+    {
+        $filteredPrices = [];
+        foreach ($prices as $price) {
+            $hasAllRequisites = true;
+            foreach ($enchantRequisites as $requisite) {
+                $hasAllRequisites = $hasAllRequisites && $this->hasEnchant($requisite, $price);
+            }
+            if ($hasAllRequisites) {
+                $filteredPrices[] = $this->beautifyPriceItem($price);
+            }
+        }
+
+        return $filteredPrices;
     }
 }
