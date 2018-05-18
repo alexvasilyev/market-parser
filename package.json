@@ -2,7 +2,6 @@
     "devDependencies": {
         "@symfony/webpack-encore": "^0.19.0",
         "bootstrap-sass": "^3.3.7",
-        "font-awesome-webpack": "^0.0.5-beta.2",
         "jquery": "^3.3.1",
         "node-sass": "^4.9.0",
         "sass-loader": "^7.0.1",
@@ -17,6 +16,7 @@
         "build": "encore production"
     },
     "dependencies": {
+        "@fortawesome/fontawesome": "^1.1.8",
         "less": "^3.0.4"
     }
 }

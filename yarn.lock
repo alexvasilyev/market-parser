@@ -2,6 +2,16 @@
 # yarn lockfile v1
 
 
+"@fortawesome/fontawesome-common-types@^0.1.7":
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-common-types/-/fontawesome-common-types-0.1.7.tgz#4336c4b06d0b5608ff1215464b66fcf9f4795284"
+
+"@fortawesome/fontawesome@^1.1.8":
+  version "1.1.8"
+  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome/-/fontawesome-1.1.8.tgz#75fe66a60f95508160bb16bd781ad7d89b280f5b"
+  dependencies:
+    "@fortawesome/fontawesome-common-types" "^0.1.7"
+
 "@symfony/webpack-encore@^0.19.0":
   version "0.19.0"
   resolved "https://registry.yarnpkg.com/@symfony/webpack-encore/-/webpack-encore-0.19.0.tgz#f0725dbbede5ff9d9fdbd7a07f84accafc83ca14"
@@ -1400,7 +1410,7 @@ css-color-names@0.0.4:
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/css-color-names/-/css-color-names-0.0.4.tgz#808adc2e79cf84738069b646cb20ec27beb629e0"
 
-css-loader@^0.26.2, css-loader@~0.26.1:
+css-loader@^0.26.2:
   version "0.26.4"
   resolved "https://registry.yarnpkg.com/css-loader/-/css-loader-0.26.4.tgz#b61e9e30db94303e6ffc892f10ecd09ad025a1fd"
   dependencies:
@@ -2126,14 +2136,6 @@ follow-redirects@^1.0.0:
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.4.1.tgz#d8120f4518190f55aac65bb6fc7b85fcd666d6aa"
   dependencies:
     debug "^3.1.0"
-
-font-awesome-webpack@^0.0.5-beta.2:
-  version "0.0.5-beta.2"
-  resolved "https://registry.yarnpkg.com/font-awesome-webpack/-/font-awesome-webpack-0.0.5-beta.2.tgz#9ea5f22f0615d08e76d8db341563649a726286d6"
-  dependencies:
-    css-loader "~0.26.1"
-    less-loader "~2.2.3"
-    style-loader "~0.13.1"
 
 for-in@^0.1.3:
   version "0.1.8"
@@ -3065,12 +3067,6 @@ lcid@^1.0.0:
   dependencies:
     invert-kv "^1.0.0"
 
-less-loader@~2.2.3:
-  version "2.2.3"
-  resolved "https://registry.yarnpkg.com/less-loader/-/less-loader-2.2.3.tgz#b6d8f8139c8493df09d992a93a00734b08f84528"
-  dependencies:
-    loader-utils "^0.2.5"
-
 less@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/less/-/less-3.0.4.tgz#d27dcedbac96031c9e7b76f1da1e4b7d83760814"
@@ -3106,15 +3102,6 @@ load-json-file@^2.0.0:
 loader-runner@^2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/loader-runner/-/loader-runner-2.3.0.tgz#f482aea82d543e07921700d5a46ef26fdac6b8a2"
-
-loader-utils@^0.2.5:
-  version "0.2.17"
-  resolved "https://registry.yarnpkg.com/loader-utils/-/loader-utils-0.2.17.tgz#f86e6374d43205a6e6c60e9196f17c0299bfb348"
-  dependencies:
-    big.js "^3.1.3"
-    emojis-list "^2.0.0"
-    json5 "^0.5.0"
-    object-assign "^4.0.1"
 
 loader-utils@^1.0.1, loader-utils@^1.0.2, loader-utils@^1.1.0:
   version "1.1.0"
@@ -5132,7 +5119,7 @@ strip-json-comments@~2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-2.0.1.tgz#3c531942e908c2697c0ec344858c286c7ca0a60a"
 
-style-loader@^0.13.2, style-loader@~0.13.1:
+style-loader@^0.13.2:
   version "0.13.2"
   resolved "https://registry.yarnpkg.com/style-loader/-/style-loader-0.13.2.tgz#74533384cf698c7104c7951150b49717adc2f3bb"
   dependencies:
