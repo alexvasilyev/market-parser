@@ -96,7 +96,11 @@ class Parser
         $prices = [];
         $rowspan[1] = 1;
         $rowspan[2] = 1;
-        $rowspanContent[1] = null;
+        $rowspan[4] = 1;
+        $rowspan[5] = 1;
+        $rowspanContent['item'] = null;
+        $rowspanContent['vendor'] = null;
+        $colspan = 1;
         /**
          * @var int $i
          * @var \DOMElement $tr
@@ -106,59 +110,147 @@ class Parser
                 continue;
             }
 
-            $tdRes = [
-                'place' => '',
-                'item' => '',
-            ];
             /**
              * @var int $j
              * @var \DOMElement $td
              */
             $rowspan[1]--;
+            $rowspan[2]--;
+            $rowspan[4]--;
+            $rowspan[5]--;
+            $selfColspan = false;
             foreach ($tr->childNodes as $j => $td) {
-                $colspan = 1;
-                $item = '';
                 switch ($j) {
                     case 0:
                         $tdRes['place'] = $td->nodeValue;
+
                         break;
                     case 1:
-                        if ($rowspan[1] <= 1) {
-                            $item = $td->ownerDocument->saveXML($td);
-                            $tdRes['item'] = $item;
-                            $rowspan[1] = $td->getAttribute('rowspan');
-                            if ($rowspan[1] > 1) {
-                                $rowspanContent[1] = $item;
+                        /** got contents */
+                        if (0 == $rowspan[1]) {
+                            $colspan = 1;
+                            $tdRes['item'] = $td->ownerDocument->saveXML($td);
+                            $rowspan[1] = ("" != $td->getAttribute('rowspan')) ? (int) $td->getAttribute('rowspan') : 1;
+                            if (1 == $rowspan[1]) {
+                                unset($rowspanContent['item']);
                             } else {
-                                $rowspanContent[1] = null;
+                                $rowspanContent['item'] = $tdRes['item'];
                             }
+                        } else {
+                            /** take info from cache */
+                            $tdRes['item'] = $rowspanContent['item'];
+
+                            if (0 == $rowspan[2]) {
+                                $tdRes['vendor'] = $td->nodeValue;
+                                $rowspan[2] = ("" != $td->getAttribute('rowspan')) ? (int) $td->getAttribute('rowspan') : 1;
+
+                                if (1 == $rowspan[2]) {
+                                    unset($rowspanContent['vendor']);
+                                } else {
+                                    $rowspanContent['vendor'] = $tdRes['vendor'];
+                                }
+                            }
+                            /** get vendor */
+                            /** Check for colspan */
+                            $colspan = ("" != $td->getAttribute('colspan')) ? (int) $td->getAttribute('colspan') : 1;
                         }
 
                         break;
                     case 2:
-                        $colspan = ("" !== $td->getAttribute('colspan')) ? $td->getAttribute('colspan') : 1;
-                        $tdRes['vendor'] = $td->nodeValue;
+                        if (0 == $rowspan[2]) {
+                            $tdRes['vendor'] = $td->nodeValue;
+                            $rowspan[2] = ("" != $td->getAttribute('rowspan')) ? (int) $td->getAttribute('rowspan') : 1;
+
+                            if (1 == $rowspan[2]) {
+                                unset($rowspanContent['vendor']);
+                            } else {
+                                $rowspanContent['vendor'] = $tdRes['vendor'];
+                            }
+                        }
+                        /** get vendor */
+                        /** Check for colspan */
+                        $colspan = ("" != $td->getAttribute('colspan')) ? (int) $td->getAttribute('colspan') : 1;
+                        if (1 != $colspan) {
+                            $selfColspan = true;
+                            $tdRes['vend_name'] = "NPC vendor";
+                        }
 
                         break;
                     case 3:
                         if (1 == $colspan) {
                             $tdRes['vend_name'] = $td->nodeValue;
+                        } else if ($selfColspan) {
+                            if (0 == $rowspan[4]) {
+                                $tdRes['quantity'] = $td->nodeValue;
+                                $rowspan[4] = ("" != $td->getAttribute('rowspan')) ? (int) $td->getAttribute('rowspan') : 1;
+
+                                if (1 == $rowspan[4]) {
+                                    unset($rowspanContent['quantity']);
+                                } else {
+                                    $rowspanContent['quantity'] = $tdRes['quantity'];
+                                }
+                            }
                         }
 
                         break;
                     case 4:
-                        $tdRes['quantity'] = $td->nodeValue;
+                        if (1 == $colspan) {
+                            if (0 == $rowspan[4]) {
+                                $tdRes['quantity'] = $td->nodeValue;
+                                $rowspan[4] = ("" != $td->getAttribute('rowspan')) ? (int) $td->getAttribute('rowspan') : 1;
+
+                                if (1 == $rowspan[4]) {
+                                    unset($rowspanContent['quantity']);
+                                } else {
+                                    $rowspanContent['quantity'] = $tdRes['quantity'];
+                                }
+                            }
+                        } else if ($selfColspan) {
+                            if (0 == $rowspan[5]) {
+                                $tdRes['price'] = $td->nodeValue;
+                                $rowspan[5] = ("" != $td->getAttribute('rowspan')) ? (int) $td->getAttribute('rowspan') : 1;
+
+                                if (1 == $rowspan[5]) {
+                                    unset($rowspanContent['price']);
+                                } else {
+                                    $rowspanContent['price'] = $tdRes['price'];
+                                }
+                            }
+                        }
 
                         break;
                     case 5:
-                        $tdRes['price'] = $td->nodeValue;
+                        if (0 == $rowspan[5]) {
+                            $tdRes['price'] = $td->nodeValue;
+                            $rowspan[5] = ("" != $td->getAttribute('rowspan')) ? (int) $td->getAttribute('rowspan') : 1;
+
+                            if (1 == $rowspan[5]) {
+                                unset($rowspanContent['price']);
+                            } else {
+                                $rowspanContent['price'] = $tdRes['price'];
+                            }
+                        }
 
                         break;
                 }
-                if (!is_null($rowspanContent[1])) {
-                    $tdRes['item'] = $rowspanContent[1];
-                }
             }
+            if (1 < $rowspan[1] && '' == $tdRes['item']) {
+                $tdRes['item'] = $rowspanContent['item'];
+            }
+            if (1 < $rowspan[2] && '' == $tdRes['vendor']) {
+                $tdRes['vendor'] = $rowspanContent['vendor'];
+            }
+            if (1 != $colspan) {
+                $tdRes['vend_name'] = "NPC vendor";
+            }
+            if (1 < $rowspan[4] && '' == $tdRes['quantity']) {
+                $tdRes['quantity'] = $rowspanContent['quantity'];
+            }
+            if (1 < $rowspan[5] && '' == $tdRes['price']) {
+                $tdRes['price'] = $rowspanContent['price'];
+            }
+
+            $tdRes['item'] = $this->cleanItem($tdRes['item']);
             $prices[] = $tdRes;
         }
 
@@ -172,4 +264,18 @@ class Parser
         return $prices;
     }
 
+    /**
+     * @param $item
+     *
+     * @return mixed
+     */
+    protected function cleanItem($item)
+    {
+        $patterns = [
+            '/<td[^>]+>/i',
+            '/<\/td>/i'
+        ];
+
+        return $item = preg_replace($patterns, '', $item);
+    }
 }

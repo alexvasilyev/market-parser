@@ -1,0 +1,35 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <div>
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        {{ form_end(form) }}
+    </div>
+    <table>
+        <thead>
+            <th>Place</th>
+            <th>Item info</th>
+            <th>Merchant name</th>
+            <th>Shop name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+        </thead>
+        <tbody>
+            {% for price in prices %}
+                <tr>
+                    <td>{{ price.place }}</td>
+                    <td>{{ price.item|raw }}</td>
+                    <td>{{ price.vendor }}</td>
+                    <td>{{ price.vend_name }}</td>
+                    <td>{{ price.quantity }}</td>
+                    <td>
+                        {% if price.price is defined %}
+                            {{ price.price }}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
