@@ -1,0 +1,61 @@
+<header class="header admin-panel">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="{{ path('admin_landing') }}">FYSV CP</a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    {% set route = app.request.attributes.get('_route') %}
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li class="{{ (route starts with 'admin_simple_parser') ? 'active' : '' }}">
+                            <a href="{{ path('admin_simple_parser') }}">
+                                Simple Parser
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li class="{{ (route starts with 'admin_test') ? 'active' : '' }} dropdown">
+                            <a href="{{ path('admin_test') }}" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+                                Test
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="{{ 'admin_test_1' == route ? 'active' : '' }}">
+                                    <a href="{{ path('admin_test') }}">
+                                        Test 1
+                                    </a>
+                                </li>
+                                <li class="{{ 'admin_test_2' == route ? 'active' : '' }}">
+                                    <a href="{{ path('admin_test') }}">
+                                        Test 2
+                                    </a>
+                                </li>
+                                <li class="{{ 'admin_test_1' == route ? 'active' : '' }}">
+                                    <a href="{{ path('admin_test') }}">
+                                        Test 3
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                </ul>
+                <ul class="nav navbar-nav navbar-right user-space">
+                    <li class="dropdown">
+                        <a aria-expanded="false" aria-haspopup="true" class="dropdown-toggle" data-toggle="dropdown" href="#" role="button">
+                            {{ app.user.userName }}
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="{{  path('fos_user_security_logout')  }}">
+                                    Log out
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>

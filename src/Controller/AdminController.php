@@ -56,4 +56,13 @@ class AdminController extends Controller
             'prices' => [],
         ];
     }
+
+    /**
+     * @Route("/test", name="admin_test")
+     * @Template()
+     */
+    public function testAction()
+    {
+        return [];
+    }
 }

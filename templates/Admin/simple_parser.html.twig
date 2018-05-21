@@ -1,35 +1,81 @@
 {% extends "base.html.twig" %}
 
 {% block body %}
-    <div>
-        {{ form_start(form) }}
-        {{ form_widget(form) }}
-        {{ form_end(form) }}
-    </div>
-    <table>
-        <thead>
-            <th>Place</th>
-            <th>Item info</th>
-            <th>Merchant name</th>
-            <th>Shop name</th>
-            <th>Quantity</th>
-            <th>Price</th>
-        </thead>
-        <tbody>
-            {% for price in prices %}
+    <div class="col-md-12">
+        <h1>
+            Countries /
+            <small>List</small>
+        </h1>
+        <div class="database-filters">
+            <div class="row">
+                {{ form_start(form) }}
+                <div class="form-group col-md-2">
+                    {{ form_widget(form.q) }}
+                </div>
+                <div class="form-group col-md-1">
+                    {{ form_widget(form.Submit) }}
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div>
+                    Total countries count:
+                    {{ prices|length }}
+                </div>
+            </div>
+            <table class="table table-hover">
+                <thead>
                 <tr>
-                    <td>{{ price.place }}</td>
-                    <td>{{ price.item|raw }}</td>
-                    <td>{{ price.vendor }}</td>
-                    <td>{{ price.vend_name }}</td>
-                    <td>{{ price.quantity }}</td>
-                    <td>
-                        {% if price.price is defined %}
-                            {{ price.price }}
-                        {% endif %}
-                    </td>
+                    <th>
+                        Place
+                    </th>
+                    <th>
+                        Item
+                    </th>
+                    <th>
+                        Vendor
+                    </th>
+                    <th>
+                        Vend name
+                    </th>
+                    <th>
+                        Quantity
+                    </th>
+                    <th>
+                        Price
+                    </th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                </thead>
+                <tbody>
+                {% for price in prices %}
+                    <tr>
+                        <td>
+                            {{ price.place }}
+                        </td>
+                        <td>
+                            {{ price.item|raw }}
+                        </td>
+                        <td>
+                            {{ price.vendor }}
+                        </td>
+                        <td>
+                            {{ price.vend_name }}
+                        </td>
+                        <td>
+                            {{ price.quantity }}
+                        </td>
+                        <td>
+                            {{ price.price }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {#<div class="navigation text-center">#}
+                {#<%= knp_pagination_render(pagination) %>#}
+            {#</div>#}
+        </div>
+    </div>
 {% endblock %}
