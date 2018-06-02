@@ -5,6 +5,7 @@ namespace App\Controller;
 
 use App\Form\SimpleParserType;
 use App\Service\Parser;
+use App\Service\ResultsFilter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -40,10 +41,19 @@ class AdminController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
+
+            $requisites = [];
+            foreach ($data['requisites'] as $requisite) {
+                $requisites[] = $requisite['requisite'];
+            }
+
             /** @var Parser $parser */
             $parser = $this->get(Parser::class);
             $searchOptions = ['name' => $data['q']];
             $prices = $parser->parseMarket($searchOptions);
+            /** @var ResultsFilter $resultsFilter */
+            $resultsFilter = $this->get(ResultsFilter::class);
+            $prices = $resultsFilter->filter($prices, $requisites);
 
             return [
                 'form' => $form->createView(),

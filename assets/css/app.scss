@@ -11,3 +11,15 @@ $fa-font-path: "~font-awesome/fonts";
 li.dropdown:hover > .dropdown-menu {
   display: block;
 }
+
+ul.requisites {
+  li {
+    list-style: none;
+    input {
+      margin-bottom: 3px;
+    }
+    div {
+      float: left;
+    }
+  }
+}

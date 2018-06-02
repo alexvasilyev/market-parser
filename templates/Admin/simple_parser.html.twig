@@ -3,7 +3,7 @@
 {% block body %}
     <div class="col-md-12">
         <h1>
-            Countries /
+            Items /
             <small>List</small>
         </h1>
         <div class="database-filters">
@@ -11,6 +11,15 @@
                 {{ form_start(form) }}
                 <div class="form-group col-md-2">
                     {{ form_widget(form.q) }}
+                </div>
+                <div class="form-group col-md-3">
+                    <ul class="requisites" data-prototype="{{ form_widget(form.requisites.vars.prototype)|e('html_attr') }}">
+                        {% for requisite in form.requisites %}
+                            <li>
+                                {{ form_widget(requisite.requisite) }}
+                            </li>
+                        {% endfor %}
+                    </ul>
                 </div>
                 <div class="form-group col-md-1">
                     {{ form_widget(form.Submit) }}
@@ -21,7 +30,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <div>
-                    Total countries count:
+                    Total items found:
                     {{ prices|length }}
                 </div>
             </div>
@@ -78,4 +87,10 @@
             {#</div>#}
         </div>
     </div>
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/build/js/requisites.js') }}"></script>
 {% endblock %}
